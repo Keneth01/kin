@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Monthly Bill Breakdown</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0 15px;
+    }
+    button {
+      padding: 10px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    h3 {
+      margin-top: 30px;
+    }
+    .result-box {
+      background: #f2f2f2;
+      padding: 15px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Monthly Bill Breakdown</h2>
+
+  <label>Electricity Bill (₱):</label>
+  <input type="number" id="electricity" placeholder="e.g. 2200">
+
+  <label>Water Bill (₱):</label>
+  <input type="number" id="water" placeholder="e.g. 500">
+
+  <label>WiFi Bill (₱):</label>
+  <input type="number" id="wifi" placeholder="e.g. 1150">
+
+  <button onclick="calculate()">Calculate</button>
+
+  <div id="output"></div>
+
+  <script>
+    function calculate() {
+      const electricity = parseFloat(document.getElementById("electricity").value) || 0;
+      const water = parseFloat(document.getElementById("water").value) || 0;
+      const wifi = parseFloat(document.getElementById("wifi").value) || 0;
+
+      // Fixed values
+      const rent = 1500;
+      const rentYou = 750;
+      const rentPartner = 750;
+
+      const electricYou = 700;
+      const electricParents = 800;
+      const electricRemainder = Math.max(0, electricity - electricYou - electricParents);
+      const electricPartner = electricRemainder / 2;
+
+      // Final water rule: 150 you, 150 partner, rest parents
+      const waterYou = 150;
+      const waterPartner = 150;
+      const waterParents = Math.max(0, water - waterYou - waterPartner);
+
+      const wifiYou = 375;
+      const wifiPartner = 375;
+      const wifiParents = 400;
+
+      // Totals
+      const totalYou = rentYou + electricYou + (electricRemainder / 2) + waterYou + wifiYou;
+      const totalPartner = rentPartner + electricPartner + waterPartner + wifiPartner;
+      const totalParents = electricParents + waterParents + wifiParents;
+
+      document.getElementById("output").innerHTML = `
+        <h3>Detailed Breakdown</h3>
+        <div class="result-box">
+          <strong>You:</strong><br>
+          • Rent: ₱${rentYou.toFixed(2)}<br>
+          • Electricity: ₱${electricYou.toFixed(2)} + ₱${(electricRemainder / 2).toFixed(2)}<br>
+          • Water: ₱${waterYou.toFixed(2)}<br>
+          • WiFi: ₱${wifiYou.toFixed(2)}<br>
+          <strong>Total: ₱${totalYou.toFixed(2)}</strong>
+        </div><br>
+
+        <div class="result-box">
+          <strong>Partner:</strong><br>
+          • Rent: ₱${rentPartner.toFixed(2)}<br>
+          • Electricity: ₱${electricPartner.toFixed(2)}<br>
+          • Water: ₱${waterPartner.toFixed(2)}<br>
+          • WiFi: ₱${wifiPartner.toFixed(2)}<br>
+          <strong>Total: ₱${totalPartner.toFixed(2)}</strong>
+        </div><br>
+
+        <div class="result-box">
+          <strong>Parents:</strong><br>
+          • Electricity: ₱${electricParents.toFixed(2)}<br>
+          • Water: ₱${waterParents.toFixed(2)}<br>
+          • WiFi: ₱${wifiParents.toFixed(2)}<br>
+          <strong>Total: ₱${totalParents.toFixed(2)}</strong>
+        </div>
+      `;
+    }
+  </script>
+
+</body>
+</html>
